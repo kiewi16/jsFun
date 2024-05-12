@@ -20,26 +20,37 @@ const { dinosaurs, humans, movies } = require('./datasets/dinosaurs');
 
 // DATASET: kitties from ./datasets/kitties
 const kittyPrompts = {
-  orangePetNames() {
+  orangePetNames(kittyData) {
     // Return an array of just the names of kitties who are orange e.g.
-        // ['Tiger', 'Snickers']
+    // ['Tiger', 'Snickers']
 
-        /* CODE GOES HERE */
+    const orangeKitties = kittyData.filter((kitten) => {
+      return kitten.color === 'orange'
+    });
+
+    const orangeKittyNames = orangeKitties.map((kitten) => {
+      return kitten.name
+    });
+      return orangeKittyNames
 
     // Annotation:
-    // Write your annotation here as a comment
+    // .filter checks every element in the kitties array to see if it has a key of "color" with a value of "orange". If the element passed to the callback function as an argument returns true (i.e., has key of color with a value of "orange"), the element is added to the array stored to the orangeKitties variable. orangeKitties doesn't need to be returned because it is an intermediate step. 
+    // .map executes the same code on every element in the orangeKittyNames array. It transforms the array of orangeKitties into an array of their names. 
   },
 
-  sortByAge() {
+  sortByAge(kittyData) {
     // Sort the kitties by their age
+    // Return an array of objects that are in order from oldest to youngest kitty.
 
-    /* CODE GOES HERE */
-
-    // Annotation:
-    // Write your annotation here as a comment
+    let organizeKittenAges = kittyData.map(kitten => {
+      return kitten
+    });
+    return organizeKittenAges.sort((kittyA, kittyB) => kittyB.age - kittyA.age)
   },
-
-  growUp() {
+    // Annotation:
+    // kittyA and kittyB represent the two elements in array being compared. If the result is positive, kittyB is sorted to an index lower than kittyA (meaning kittyB is older and kittyA is younger).
+  
+  growUp(kittyData) {
     // Return an array of kitties who have all grown up by 2 years e.g.
     // [{
     //   name: 'Felicia',
@@ -53,8 +64,15 @@ const kittyPrompts = {
     // },
     // ...etc]
 
-    /* CODE GOES HERE */
-  }
+    const olderKitties = kittyData.map(kitten => {
+     kitten.age += 2
+     return kitten
+    })
+    return olderKitties.sort((kittyA, kittyB) => kittyB.age - kittyA.age)
+  },
+    // Annotation:
+    // .map executes the same code on every element in the array. It adds 2 to the kitten.age value for each kitten element.
+    // kittyA and kittyB represent the two elements in array being compared. If the result is positive, kittyB is sorted to an index lower than kittyA (meaning kittyB is older and kittyA is younger).
 };
 
 // PLEASE READ-----------------------
@@ -63,17 +81,38 @@ const kittyPrompts = {
 // they can perform the same utility
 // for the kitties or puppers datasets, depending on what arguments you send through.
 
+const petPrompts = {
+  orangePetNames(petData) {
+    const orangePets = petData.filter((pet) => {
+      return pet.color === 'orange'
+    });
+    const orangePetNames = orangePets.map((pet) => {
+      return pet.name
+    });
+      return orangePetNames
+  },
+
+  sortByAge(petData) {
+    let organizePetAges = petData.map(pet => {
+      return pet
+    });
+    return organizePetAges.sort((petA, petB) => petB.age - petA.age)
+  },
+
+  growUp(petData) {
+    const olderPets = petData.map(pet => {
+     pet.age += 2
+     return pet
+    })
+    return olderPets.sort((petA, petB) => petB.age - petA.age)
+  },
+};
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-
-
-
-
-
 
 // DATASET: clubs from ./datasets/clubs
 const clubPrompts = {
@@ -94,21 +133,11 @@ const clubPrompts = {
   }
 };
 
-
-
-
-
-
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-
-
-
-
-
 
 // DATASET: mods from ./datasets/mods
 const modPrompts = {
@@ -122,28 +151,33 @@ const modPrompts = {
     //   { mod: 4, studentsPerInstructor: 8 }
     // ]
 
-    /* CODE GOES HERE */
+    // const studentsForEachInstructor = mods.map(modObj => {
+    //   return {
+    //     mod: modObj.mod,
+    //     studentsPerInstructor: modObj.students / modObj.instructors
+    //   }
+    // });
+    // console.log(studentsForEachInstructor)
+    // return studentsForEachInstructor
 
+   return mods.map(modObj => {
+      return {
+        mod: modObj.mod,
+        studentsPerInstructor: modObj.students / modObj.instructors
+      }
+    });
     // Annotation:
-    // Write your annotation here as a comment
+    // Use .map because test wants us to return an array of objects and the length of the modified array should be the same length as the original array. 
+    // We need to return a new object with mod and studentsPerInstructor as keys. We assign the values to the new keys using the information provided in the original mod object. 
+    // To determine how many students there are per instructor, we divide the number of students by the number of instructors. 
   }
 };
 
-
-
-
-
-
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-
-
-
-
-
 
 // DATASET: cakes from ./datasets/cakes
 const cakePrompts = {
@@ -156,10 +190,16 @@ const cakePrompts = {
     //    ..etc
     // ]
 
-    /* CODE GOES HERE */
+   return cakes.map(cake => {
+    return {
+    flavor: cake.cakeFlavor,
+    inStock: cake.inStock
+    }
+   })
 
     // Annotation:
     // Write your annotation here as a comment
+
   },
 
   onlyInStock() {
@@ -182,8 +222,9 @@ const cakePrompts = {
     // },
     // ..etc
     // ]
-
-    /* CODE GOES HERE */
+    return cakes.filter(cake => {
+      return cake.inStock > 0
+    })
 
     // Annotation:
     // Write your annotation here as a comment
@@ -193,10 +234,19 @@ const cakePrompts = {
     // Return the total amount of cakes in stock e.g.
     // 59
 
-    /* CODE GOES HERE */
+    // let total = 0;
+    // cakes.forEach(cake => {
+    //   total += cake.inStock
+    // })
+    // return total
+
+    return cakes.reduce((totalCakes, cake) => {
+      totalCakes += cake.inStock
+      return totalCakes
+    }, 0)
 
     // Annotation:
-    // Write your annotation here as a comment
+    // This prompt can be solved using .forEach and .reduce.
   },
 
   allToppings() {
@@ -204,10 +254,17 @@ const cakePrompts = {
     // every cake in the dataset e.g.
     // ['dutch process cocoa', 'toasted sugar', 'smoked sea salt', 'berries', ..etc]
 
-    /* CODE GOES HERE */
+    let allToppings = []
+    cakes.forEach(cake => {
+      cake.toppings.forEach(topping => {
+        if(!allToppings.includes(topping)){
+          allToppings.push(topping)
+        }
+      })
+    })
+    return allToppings;
 
     // Annotation:
-    // Write your annotation here as a comment
   },
 
   groceryList() {
@@ -221,28 +278,36 @@ const cakePrompts = {
     //    ...etc
     // }
 
-    /* CODE GOES HERE */
+    const allToppings = cakes.map(cake => {
+      return cake.toppings
+    })
+
+    const allToppingsFlattened = allToppings.reduce((array, innerToppingsArray) => {
+      return [...array, ...innerToppingsArray]
+    }, [])
+
+    const groceryListObj = allToppingsFlattened.reduce((accumulator, topping) => {
+      if(accumulator[topping]) {
+        accumulator[topping]++;
+      } else{
+        accumulator[topping] = 1;
+      }
+      return accumulator 
+    }, {})
+    return groceryListObj
 
     // Annotation:
-    // Write your annotation here as a comment
+    // use .map to create a new array by of six elements, each of which are an array that contains toppings. 
+    // use .reduce to flatten the six elements into a single array.
+    // check if the current topping is already a key in the accumulator object. If it is, it increments the count of that topping. If it's not, it adds the topping to the accumlator with a count of 1.
+    // bracket notation is used because topping is a variable that holds the name of a key in the accumulator object. The toppings are strings that sometimes have spaces. 
   }
 };
-
-
-
-
-
-
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-
-
-
-
-
 
 // DATASET: classrooms from ./datasets/classrooms
 const classPrompts = {
@@ -255,10 +320,13 @@ const classPrompts = {
     //   { roomLetter: 'G', program: 'FE', capacity: 29 }
     // ]
 
-    /* CODE GOES HERE */
+    const feClassrooms = classrooms.filter(classroom => {
+      return classroom.program === 'FE'
+    })
+    return feClassrooms
 
     // Annotation:
-    // Write your annotation here as a comment
+    // use .filter to return an array of classroom elements whose classroom.program is strictly equal to 'FE'.
   },
 
   totalCapacities() {
@@ -269,21 +337,59 @@ const classPrompts = {
     //   beCapacity: 96
     // }
 
-    /* CODE GOES HERE */
+    // pseudocode:
+    // first find the classroom.program with value of "FE"
+    // second find the classroom.program with value of "BE"
+    // sum the capacity for the FE program
+    // sum the capacity for the BE program
+    // create a new object with feCapacity and beCapacity as keys that have corresponding capacity values. 
 
+    // let totalFECapacity = 0;
+    // let totalBECapacity = 0; 
+
+    // const feClassrooms = classrooms.filter(classroom => {
+    //   return classroom.program === "FE"
+    // })
+
+    // feClassrooms.forEach(classroom => {
+    //   totalFECapacity += classroom.capacity
+    // })
+
+    // const beClassrooms = classrooms.filter(classroom => {
+    //   return classroom.program === "BE"
+    // })
+
+    // beClassrooms.forEach(classroom => {
+    //   totalBECapacity += classroom.capacity
+    // })
+   
+    const totalCapacities = classrooms.reduce((accumulator, classroom) => {
+      if(classroom.program === "FE") {
+        accumulator.feCapacity += classroom.capacity
+      } else {
+        accumulator.beCapacity += classroom.capacity
+      }
+      return accumulator
+    }, {feCapacity: 0, beCapacity: 0})
+    return totalCapacities
+    
     // Annotation:
-    // Write your annotation here as a comment
+    // use .reduce to return a new object
+    // can use an object with keys and values as the initial value
   },
 
   sortByCapacity() {
     // Return the array of classrooms sorted by their capacity (least capacity to greatest)
 
-    /* CODE GOES HERE */
+    const sortedClassrooms = classrooms.sort((classroomA, classroomB) => {
+      return classroomA.capacity - classroomB.capacity
+    })
+    return sortedClassrooms
 
     // Annotation:
-    // Write your annotation here as a comment
+    // no annotations at this time.
   }
-};
+}
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -357,10 +463,20 @@ const weatherPrompts = {
     // return an array of all the average temperatures. Eg:
     // [ 40, 40, 44.5, 43.5, 57, 35, 65.5, 62, 14, 46.5 ]
 
-    /* CODE GOES HERE */
+    // pseuodocode 
+    // iterate over the weather array and drill into the weatherByLocation objects to get to the temperate key.
+    // temperature is a key that has two properties - a high key and a low key whose values are the high and low temperatures of that location. 
+    // need to find the average of the high temperature and low temperature. high temp + low temp / 2
+    
+   const avgTemps = weather.map(weatherByLocation => {
+      return (weatherByLocation.temperature.high + weatherByLocation.temperature.low) / 2
+    })
+    return avgTemps
 
     // Annotation:
-    // Write your annotation here as a comment
+    // use .map because we want to return a new array based on the original array.
+    // .map will always return a new array of the same length as the original array. 
+    // we want to do something to each weather element and return that modified item. 
   },
 
   findSunnySpots() {
@@ -370,10 +486,25 @@ const weatherPrompts = {
     // 'New Orleans, Louisiana is sunny.',
     // 'Raleigh, North Carolina is mostly sunny.' ]
 
-    /* CODE GOES HERE */
+    // pseduocode:
+    // iterate over each weather element and find the type key with a value of sunny or mostly sunny.
+    // use string interpolation to print an array of sentences of the locations that are sunny and mostly sunny.
+
+    let sunnySpotsMessage = []
+    const findSunnySpots = weather.filter(weather => {
+      return weather.type === 'sunny' || weather.type === 'mostly sunny'
+    })
+
+    findSunnySpots.forEach(location => {
+      sunnySpotsMessage.push(`${location.location} is ${location.type}.`)
+    })
+    return sunnySpotsMessage
 
     // Annotation:
-    // Write your annotation here as a comment
+    // use .filter to iterate over each weather element and return a new array of weather elements whose type key has a value of sunny or mostly sunny.
+    // able to use the or operator || to return both sunny and mostly sunny. 
+    // do not need to return findSunnySpots to use in the forEach method.
+    // able to push an entire sentence to an empty array
   },
 
   findHighestHumidity() {
@@ -385,11 +516,23 @@ const weatherPrompts = {
     //   temperature: { high: 49, low: 38 }
     // }
 
-    /* CODE GOES HERE */
+    // pseudocode:
+    // iterate over each weather element and return the location with the highest humidity. 
+    // will likely need to use two methods.
+
+    const highestToLowestHumidity = weather.sort((locationA, locationB) => {
+      return locationB.humidity - locationA.humidity
+    })
+    
+    return highestToLowestHumidity.find(location => {
+      return location.humidity > 0
+    })
 
     // Annotation:
-    // Write your annotation here as a comment
-
+    // use .sort to sort the weather array from highest to lowest humidity.
+    // we know that the location with the highest humidity is the first element (index position 0) in the highestToLowestHumidity array.
+    // .find returns the first instance of an item.
+    // used. find to return the first element (location) with a humidity over 0. 
   }
 };
 
@@ -398,7 +541,6 @@ const weatherPrompts = {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-
 
 // DATASET: nationalParks from ./datasets/nationalParks
 
@@ -411,10 +553,23 @@ const nationalParksPrompts = {
     //   parksVisited: ["Rocky Mountain", "Acadia", "Zion"]
     //}
 
-    /* CODE GOES HERE */
-
+    const parkVisitStatus = nationalParks.reduce((accumulator, parkInfo) => {
+      if(parkInfo.visited) {
+        accumulator.parksVisited.push(parkInfo.name)
+      } else if (!parkInfo.visited) {
+        accumulator.parksToVisit.push(parkInfo.name)
+      }
+      return accumulator
+    }, {parksToVisit: [], parksVisited: []})
+    return parkVisitStatus
+    
     // Annotation:
-    // Write your annotation here as a comment
+    // the initial value is an object with the keys parksToVisit and parksVisited. The values of each key is an empty array.
+    // currentValue is the parkInfo element (this is what we are iterating over).
+    // if parkInfo.visited is strictly equal to truthy, then push the parkInfo.name into the accumulator.parksVisited. 
+    // if parkInfo.visited is strictly equal to falsy, then push the parkInfo.name into the accumulator.parksToVisit. 
+    // return the accumulator within the callback function.
+    // return the variable outside the callback function. 
   },
 
   getParkInEachState() {
@@ -426,11 +581,37 @@ const nationalParksPrompts = {
     // { Utah: 'Zion' },
     // { Florida: 'Everglades' } ]
 
+    // const parksInEachState = nationalParks.map(parkInfo => {
+    //   let parkState = parkInfo.location
+    //   return {
+    //     [parkState]: parkInfo.name
+    //   }
+    // })
+    // return parksInEachState
 
-    /* CODE GOES HERE */
+    const parksInEachState = nationalParks.map(parkInfo => ({
+      [parkInfo.location]: parkInfo.name
+    }))
+    return parksInEachState
 
-    // Annotation:
-    // Write your annotation here as a comment
+    //  const parksInEachState = Object.fromEntries(nationalParks.map(parkInfo => {
+    //    return [parkInfo.location, parkInfo.name]
+    //   }))
+    //   console.log(parksInEachState)
+   
+    // const parksInEachState = nationalParks.reduce((accumulator, parkInfo) => {
+    //   accumulator[parkInfo.location] = parkInfo.name
+    //   return accumulator
+    // }, {})
+    
+    // console.log("parksInEachState", parksInEachState)
+    // return parksInEachState
+
+      // Annotation:
+    // use .map to transform parkInfo elements in existing array into new array of objects.
+    // the key for the new objects is the state in which the national park is located. declare a variable for the key name outside of the object being returned. For the first iteration, the key value will be "Colorado". For each subsequent iteration, the key value will change based on the parkInfo.location. Use bracket notation to pass through the value of the variable for that iteration. 
+    // the value of the state key is the national park name. use parkInfo.name to assign the value to the key.
+    // the code using .reduce and Object.fromEnteries does not work because it returns one object. The test is expecting an array of six elements (objects).
   },
 
   getParkActivities() {
@@ -464,21 +645,27 @@ const nationalParksPrompts = {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-
-
-
-
-
 // DATASET: breweries from ./datasets/breweries
 const breweryPrompts = {
   getBeerCount() {
     // Return the total beer count of all beers for every brewery e.g.
     // 40
 
-    /* CODE GOES HERE */
+    // pseudocode:
+    // breweries is an array of brewery objects.
+    // each brewery has a beer key that contains an array of beer objects.
+    // need to iterate through each brewery element and then iterate through each beer key to return the total beer count for every brewery. 
+    // declare totalBeer variable that starts at 0 and is updated with the number of beers per brewery in each iteration using += 
+    // use .length to determine how many beer elements there are in brewery.beers.
+
+    let totalBeers = 0; 
+    breweries.forEach(brewery => {
+      totalBeers += brewery.beers.length
+    })
+    return totalBeers
 
     // Annotation:
-    // Write your annotation here as a comment
+    // If modifying a variable or pushing to an array using .forEach, the variable needs to be declared outside of the callback function. The variable needs to be returned outside of the callback function. 
   },
 
   getBreweryBeerCount() {
@@ -490,10 +677,20 @@ const breweryPrompts = {
     // ...etc.
     // ]
 
-    /* CODE GOES HERE */
+    // pseudocode:
+    // accessing information from the original breweries array to return a new array of objects. The new objets will have keys of name and beerCount. 
+    // use .map to iterate over each brewery element and access the information needed in the new array of objects. 
+    // use .length to determine how many beers (elements) there are in the brewery.beers and store that value to the new beerCount key. 
+
+    return breweries.map(brewery => {
+      return {
+        name: brewery.name,
+        beerCount: brewery.beers.length
+      }
+    })
 
     // Annotation:
-    // Write your annotation here as a comment
+    // use .map to iterate over an array of objects and grab the information provided in each element (object) to create a new object.
   },
 
   getSingleBreweryBeerCount(breweryName) {
@@ -501,11 +698,22 @@ const breweryPrompts = {
     // brewery has e.g.
     // given 'Ratio Beerworks', return 5
 
+    // pseudocode: 
+    // passing through a parameter (breweryName)
+    // return the number of beers that breweryName has
+    // use .length to determine how many beers (elements) there are in brewery.beers
+    
+    let totalBeersPerBrewery = 0;
 
-    /* CODE GOES HERE */
+    breweries.forEach(brewery => {
+      if(breweryName === brewery.name) {
+        totalBeersPerBrewery = brewery.beers.length
+      }
+    })
+    return totalBeersPerBrewery
 
     // Annotation:
-    // Write your annotation here as a comment
+    // no annotations at this time 
   },
 
   findHighestAbvBeer() {
@@ -513,13 +721,31 @@ const breweryPrompts = {
     // e.g.
     // { name: 'Barrel Aged Nature\'s Sweater', type: 'Barley Wine', abv: 10.9, ibu: 40 }
 
-    /* CODE GOES HERE */
+    const beers = breweries.map(brewery => {
+      return brewery.beers
+    })
+    
+    const flattenedBeerArray = beers.reduce((accumulator, currentValue) => {
+      return accumulator.concat(currentValue)
+    }, [])
+
+    const sortedFlattenedBeerArray = flattenedBeerArray.sort((beerA, beerB) => {
+      return beerB.abv - beerA.abv
+    })
+
+    return sortedFlattenedBeerArray.find(beer => {
+      return beer.abv > 0
+    }) 
 
     // Annotation:
-    // Write your annotation here as a comment
-  }
+    // use .map to create a new array of five array elements, each of which contain beer objects. 
+    // use .reduce method is used to iterate over each sub-array (currentValue) and concatenate it to the accumulator array (accumulator). The second argument to .reduce() is an empty array ([]). which serves as the initial value for the accumulator. 
+    // after runnning the .reduce method, the flattenedBeerArray will contain all the objects from the original nested arrays. 
+    // use .sort to sort beer objects from highest to lowest abv.
+    // we know that the beer objects in the flattenedBeerArray are now in order from highest to lowest abv.
+    // use .find to return the first element (beer object) in the sortedFlattenedBeerArray, which we know has the highest abv. 
+  } 
 };
-
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -535,7 +761,7 @@ const boardGamePrompts = {
     // e.g. given an argument of "strategy", return
     // ["Chess", "Catan", "Checkers", "Pandemic", "Battle Ship", "Azul", "Ticket to Ride"]
 
-    /* CODE GOES HERE */
+    
 
     // Annotation:
     // Write your annotation here as a comment
