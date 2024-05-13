@@ -400,7 +400,7 @@ const classPrompts = {
 // DATASET: books from './datasets/books
 
 const bookPrompts = {
-  removeViolence() {
+  removeViolence(booksArray) {
     // Your function should access the books data through a parameter (it is being passed as an argument in the test file)
     // return an array of all book titles that are not horror or true crime. Eg:
 
@@ -410,14 +410,22 @@ const bookPrompts = {
     //   'The Curious Incident of the Dog in the Night - Time', 'The Bell Jar',
     //   'Catch-22', 'Treasure Island']
 
-
-    /* CODE GOES HERE */
+    const nonScaryBooks = booksArray.reduce((newBooksArray, book) => {
+      if(book.genre !== 'Horror' && book.genre !== 'True Crime') {
+        newBooksArray.push(book.title)
+      }
+    return newBooksArray
+    }, [])
+    return nonScaryBooks
+  
 
     // Annotation:
-    // Write your annotation here as a comment
+    // this code initially did not pass the test because I used the OR || operator instead of the and && operator AND
+    // I was pushing book.name instead of book.title
+    // remember to slow down
 
   },
-  getNewBooks() {
+  getNewBooks(books) {
     // return an array of objects containing all books that were
     // published in the 90's and 00's. Inlucde the title and the year Eg:
 
@@ -425,7 +433,17 @@ const bookPrompts = {
     //  { title: 'Life of Pi', year: 2001 },
     //  { title: 'The Curious Incident of the Dog in the Night-Time', year: 2003 }]
 
-    /* CODE GOES HERE */
+    const booksFromThe90s = books.filter(book => {
+      return book.published > 1990
+    })
+    
+    const newArrayOfBookObjs = booksFromThe90s.map(book => {
+      return {
+        title: book.title,
+        year: book.published,
+      }
+    })
+    return newArrayOfBookObjs
 
     // Annotation:
     // Write your annotation here as a comment
@@ -581,18 +599,13 @@ const nationalParksPrompts = {
     // { Utah: 'Zion' },
     // { Florida: 'Everglades' } ]
 
-    // const parksInEachState = nationalParks.map(parkInfo => {
-    //   let parkState = parkInfo.location
-    //   return {
-    //     [parkState]: parkInfo.name
-    //   }
-    // })
-    // return parksInEachState
-
-    const parksInEachState = nationalParks.map(parkInfo => ({
-      [parkInfo.location]: parkInfo
-    }))
-    return parksInEachState
+    const parksInEachState = nationalParks.map(parkInfo => {
+      let parkState = parkInfo.location
+      return {
+        [parkState]: parkInfo.name
+      }
+    })
+    return parksInEachState 
 
     //  const parksInEachState = Object.fromEntries(nationalParks.map(parkInfo => {
     //    return [parkInfo.location, parkInfo.name]
@@ -646,11 +659,13 @@ const nationalParksPrompts = {
     return nationalParkActivitiesNoDuplicates
 
     // Annotation:
-    // Write your annotation here as a comment
+    // use .map to iterate over existing array of six national park elements and return a new array of six arrays (elements) that contain activities
+    // use .reduce to flatten the array of six arrays into a single array
+    // use .reduce to create a new array of activities
+    // use .includes to make sure an activity is only added to the array if it isn't a duplicate
+    // DO NOT NEED TO RETURN const between lines of code
   }
 };
-
-
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -678,7 +693,8 @@ const breweryPrompts = {
     return totalBeers
 
     // Annotation:
-    // If modifying a variable or pushing to an array using .forEach, the variable needs to be declared outside of the callback function. The variable needs to be returned outside of the callback function. 
+    // If modifying a variable or pushing to an array using .forEach, the variable needs to be declared outside of the callback function
+    //  The variable needs to be returned outside of the callback function. 
   },
 
   getBreweryBeerCount() {
@@ -703,7 +719,7 @@ const breweryPrompts = {
     })
 
     // Annotation:
-    // use .map to iterate over an array of objects and grab the information provided in each element (object) to create a new object.
+    // use .map to iterate over an array of objects and grab the information provided in each element (object) to create a new object
   },
 
   getSingleBreweryBeerCount(breweryName) {
@@ -773,8 +789,6 @@ const boardGamePrompts = {
     // Return an array of just the names of the games within a specified type. 
     // e.g. given an argument of "strategy", return
     // ["Chess", "Catan", "Checkers", "Pandemic", "Battle Ship", "Azul", "Ticket to Ride"]
-
-    
 
     // Annotation:
     // Write your annotation here as a comment
