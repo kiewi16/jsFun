@@ -590,7 +590,7 @@ const nationalParksPrompts = {
     // return parksInEachState
 
     const parksInEachState = nationalParks.map(parkInfo => ({
-      [parkInfo.location]: parkInfo.name
+      [parkInfo.location]: parkInfo
     }))
     return parksInEachState
 
@@ -630,7 +630,20 @@ const nationalParksPrompts = {
     //   'backpacking',
     //   'rock climbing' ]
 
-    /* CODE GOES HERE */
+    const nationalParkActivities = nationalParks.map(nationalPark => {
+      return nationalPark.activities
+    })
+    const flattenednationalParkActivities = nationalParkActivities.reduce((array, nationalParkArray) => {
+      return [...array, ...nationalParkArray]
+    }, [])
+
+    const nationalParkActivitiesNoDuplicates = flattenednationalParkActivities.reduce((accumulator, nationalParkActivity) => {
+      if(!accumulator.includes(nationalParkActivity)) {
+        accumulator.push(nationalParkActivity)
+      }
+      return accumulator
+    }, [])
+    return nationalParkActivitiesNoDuplicates
 
     // Annotation:
     // Write your annotation here as a comment
