@@ -427,7 +427,7 @@ const bookPrompts = {
   },
   getNewBooks(books) {
     // return an array of objects containing all books that were
-    // published in the 90's and 00's. Inlucde the title and the year Eg:
+    // published in the 90's and 00's. Inlcude the title and the year Eg:
 
     // [{ title: 'Harry Potter and the Sorcerer\'s Stone', year: 1997 },
     //  { title: 'Life of Pi', year: 2001 },
@@ -643,21 +643,32 @@ const nationalParksPrompts = {
     //   'backpacking',
     //   'rock climbing' ]
 
-    const nationalParkActivities = nationalParks.map(nationalPark => {
-      return nationalPark.activities
-    })
-    const flattenednationalParkActivities = nationalParkActivities.reduce((array, nationalParkArray) => {
-      return [...array, ...nationalParkArray]
-    }, [])
+    // const nationalParkActivities = nationalParks.map(nationalPark => {
+    //   return nationalPark.activities
+    // })
+    // const flattenednationalParkActivities = nationalParkActivities.reduce((array, nationalParkArray) => {
+    //   return [...array, ...nationalParkArray]
+    // }, [])
 
-    const nationalParkActivitiesNoDuplicates = flattenednationalParkActivities.reduce((accumulator, nationalParkActivity) => {
-      if(!accumulator.includes(nationalParkActivity)) {
-        accumulator.push(nationalParkActivity)
-      }
+    // const nationalParkActivitiesNoDuplicates = flattenednationalParkActivities.reduce((accumulator, nationalParkActivity) => {
+    //   if(!accumulator.includes(nationalParkActivity)) {
+    //     accumulator.push(nationalParkActivity)
+    //   }
+    //   return accumulator
+    // }, [])
+    // return nationalParkActivitiesNoDuplicates
+
+    const nationalParkActivities = nationalParks.reduce((accumulator, currentValue) => {
+      currentValue.activities.forEach(activity => {
+        console.log(activity)
+        if(!accumulator.includes(activity)) {
+          accumulator.push(activity)
+        }
+      })
       return accumulator
     }, [])
-    return nationalParkActivitiesNoDuplicates
-
+      return nationalParkActivities
+    
     // Annotation:
     // use .map to iterate over existing array of six national park elements and return a new array of six arrays (elements) that contain activities
     // use .reduce to flatten the array of six arrays into a single array
