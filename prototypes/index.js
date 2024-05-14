@@ -116,7 +116,7 @@ const petPrompts = {
 
 // DATASET: clubs from ./datasets/clubs
 const clubPrompts = {
-  membersBelongingToClubs() {
+  membersBelongingToClubs(clubs) {
     // Your function should access the clubs data through a parameter (it is being passed as an argument in the test file)
     // Create an object whose keys are the names of people, and whose values are
     // arrays that include the names of the clubs that person is a part of. e.g.
@@ -125,7 +125,15 @@ const clubPrompts = {
     //   Pam: ['Drama', 'Art', 'Chess'],
     //   ...etc
     // }
-
+    const membersClubs = clubs.reduce((accumulator, club) => {
+      club.members.forEach(member => {
+          if(!accumulator[member]){
+            accumulator[member] = [club.club]
+          } else {accumulator[member].push(club.club)}
+      })
+      return accumulator
+    }, {})
+    return membersClubs
     /* CODE GOES HERE */
 
     // Annotation:
@@ -461,6 +469,17 @@ const bookPrompts = {
 
     /* CODE GOES HERE */
 
+    const booksOlderThan1990 = books.filter(book => {
+      return book.published > year
+    });
+
+    return booksOlderThan1990.map(book => {
+      return {
+        title: book.title,
+        year: book.published,
+      }
+    });
+
     // Annotation:
     // Write your annotation here as a comment
   }
@@ -660,7 +679,6 @@ const nationalParksPrompts = {
 
     const nationalParkActivities = nationalParks.reduce((accumulator, currentValue) => {
       currentValue.activities.forEach(activity => {
-        console.log(activity)
         if(!accumulator.includes(activity)) {
           accumulator.push(activity)
         }
@@ -803,6 +821,7 @@ const boardGamePrompts = {
 
     // Annotation:
     // Write your annotation here as a comment
+    // Object.keys
   },
 
   listGamesAlphabetically(type) {
